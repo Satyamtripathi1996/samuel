@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: utility-service-deployment
+  namespace: default
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    spec:
+      containers:
+        - name: utility--service-container
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: node_env
+                  name: utility-service-configmap
+            - name: APP_NAME
+              value: utility-service
+            - name: PORT
+              value: "3000"
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: app_env
+                  name: utility-service-configmap
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: database_url
+                  name: utility-service-secret
+            - name: APP_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: app_version
+                  name: utility-service-configmap
+          ports:
+            - name: app-port
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          image: 494106420639.dkr.ecr.us-east-1.amazonaws.com/dex/utility-service:0.1.5       
+

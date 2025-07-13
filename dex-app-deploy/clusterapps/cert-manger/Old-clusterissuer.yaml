@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns01
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory 
+    email: technical-operations+dexbeqa@mocafi.com
+    privateKeySecretRef:
+      name: letsencrypt-dns01-private-key
+    solvers:
+    - dns01:
+        route53:
+          region: us-east-1
+          role: arn:aws:iam::750014327084:role/cert-manager-route53
+          auth:
+            kubernetes:
+              serviceAccountRef:
+                name: cert-manager-acme-dns01-route53

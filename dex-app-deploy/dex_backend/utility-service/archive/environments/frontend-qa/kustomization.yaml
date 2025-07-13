@@ -1,0 +1,21 @@
+resources:
+  - ../../base
+
+namespace: frontend-qa
+
+patchesStrategicMerge:
+  - patches/replica-counts.yaml
+
+configMapGenerator:
+  - name: utility-service-configmap
+    literals:
+      - app_env=backend-qa
+      - node_env=development
+      - app_version=0.1.5
+
+# Remove this  
+secretGenerator:
+  - name: utility-service-secret
+    literals:
+      - database_url=postgresql://test:test@test.com
+    

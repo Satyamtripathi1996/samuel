@@ -1,0 +1,14 @@
+aws-load-balancer-controller:
+  enabled: true
+  serviceAccount:
+    create: true
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::750014327084:role/AmazonEKSLoadBalancerControllerRole
+  clusterName: dex-backend-us-east-1-eks
+  region: us-east-1
+  vpcId: vpc-07867185ae778b2cb
+  extraArgs:
+    - --enable-pod-identity
+    - --enable-waf
+    - --enable-wafv2
+    - --enable-oidc

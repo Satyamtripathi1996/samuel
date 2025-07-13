@@ -1,0 +1,24 @@
+
+# Global owners, unless a later match takes precedence,
+* @sammieaudu/Terraform-shared-modules
+
+# The alert.policies folder will be owned by the ODC Engineering teams and are responsible for maintaining them.
+/docs/ @sammieaudu/Terraform-shared-modules
+/environments/ @sammieaudu/Terraform-shared-modules
+/modules/ @sammieaudu/Terraform-shared-modules
+.github/ @sammieaudu/Terraform-shared-modules
+
+.github/**.yaml @sammieaudu/Terraform-shared-modules
+.github/workflows @sammieaudu/Terraform-shared-modules
+.github/workflows/**.yml @sammieaudu/Terraform-shared-modules
+.github/workflows/**.yaml @sammieaudu/Terraform-shared-modules
+
+/environments/** @sammieaudu/Terraform-shared-modules
+
+/modules/** @sammieaudu/Terraform-shared-modules
+/modules/**/** @sammieaudu/Terraform-shared-modules
+
+
+# This file itself is owned by members who are assigned the Project Admin role in this project.
+CODEOWNERS @sammieaudu/Terraform-shared-modules
+README @sammieaudu/Terraform-shared-modules

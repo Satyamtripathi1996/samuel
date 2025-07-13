@@ -1,0 +1,13 @@
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+
+namespace: default
+
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: wep-admin-service
+

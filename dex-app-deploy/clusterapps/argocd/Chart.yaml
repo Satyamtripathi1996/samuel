@@ -1,0 +1,34 @@
+apiVersion: v2
+name: argocd
+description: A Helm chart for ArgoCD
+# This chart deploys ArgoCD for managing GitOps workflows in EKS.
+version: 1.0.0
+dependencies:
+  - name: argo-cd
+    alias: argo-cd
+    repository: https://argoproj.github.io/argo-helm
+    version: 8.0.17
+  # - name: argo-events
+  #   alias: argo-events
+  #   repository: https://argoproj.github.io/argo-helm
+  #   version: 2.4.15
+  # - name: argo-rollouts
+  #   alias: argo-rollouts
+  #   repository: https://argoproj.github.io/argo-helm
+  #   version: 2.39.6
+  # - name: argo-workflows
+  #   alias: argo-workflows
+  #   repository: https://argoproj.github.io/argo-helm
+  #   version: 0.45.18
+  # - name: argocd-apps
+  #   alias: argocd-apps
+  #   repository: https://argoproj.github.io/argo-helm
+  #   version: 2.0.2
+  # - name: argocd-image-updater
+  #   alias: argocd-image-updater
+  #   repository: https://argoproj.github.io/argo-helm
+  #   version: 0.12.2
+  # - name: argocd-notifications
+  #   alias: argocd-notifications
+  #   repository: https://argoproj.github.io/argo-helm
+  #   version: 1.8.1

@@ -1,0 +1,81 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "terraform"
+    directory: "/environments"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "terraform"
+      - "dependencies"
+    commit-message:
+      prefix: "terraform"
+      include: "scope"
+    groups:
+      terraform:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "terraform"
+    directory: "/modules"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "terraform"
+      - "dependencies"
+    commit-message:
+      prefix: "terraform"
+      include: "scope"
+    groups:
+      terraform:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "github-actions"
+      - "dependencies"
+    commit-message:
+      prefix: "github-actions"
+      include: "scope"
+    groups:
+      actions:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "gomod" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    groups:
+      gomod:
+        update-types:
+          - "patch"
+
+  - package-ecosystem: "helm"
+    directory: "/" # Location of kubernetes manifests
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      composer:
+        update-types:
+          - "minor"
+          - "patch"

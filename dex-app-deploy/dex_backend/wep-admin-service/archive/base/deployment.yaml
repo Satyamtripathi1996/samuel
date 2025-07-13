@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: wep-admin-service-deployment
+  namespace: default
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    spec:
+      containers:
+        - name: wep-admin-service-container
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: node_env
+                  name: wep-admin-service-configmap
+            - name: APP_NAME
+              value: wep-admin
+            - name: PORT
+              value: "3000"
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: app_env
+                  name: wep-admin-service-configmap
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: database_url
+                  name: wep-admin-service-secret
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: aws_secrete_access_key
+                  name: wep-admin-service-secret
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: aws_access_key_id
+                  name: wep-admin-service-secret
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  key: aws_region
+                  name: wep-admin-service-configmap
+            - name: AWS_COGNITO_USER_POOL_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: aws_cognito_pool_id
+                  name: wep-admin-service-configmap
+            - name: WEP_FRONTEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: wep_frontend_url
+                  name: wep-admin-service-configmap
+          ports:
+            - name: app-port
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          image: 494106420639.dkr.ecr.us-east-1.amazonaws.com/dex/wep-admin-service:0.1.1           
+

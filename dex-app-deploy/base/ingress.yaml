@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app
+  namespace: app
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "app.dex-be.mocafi.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - app.dex-be.mocafi.com
+      secretName: app-dex-be-tls
+  rules:
+    - host: app.dex-be.mocafi.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80

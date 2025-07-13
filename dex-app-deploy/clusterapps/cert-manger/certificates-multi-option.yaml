@@ -1,0 +1,96 @@
+# Option 1: Wildcard certificate using cross-account DNS-01
+# Use this if you have cross-account Route53 access
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dev-wildcard-cert-dns01
+  namespace: istio-ingress
+spec:
+  secretName: dev-wildcard-cert-dns01
+  revisionHistoryLimit: 1
+  privateKey:
+    rotationPolicy: Always
+  commonName: "*.dev.mocafi.com"
+  dnsNames:
+    - "*.dev.mocafi.com"
+    - "dev.mocafi.com"
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: letsencrypt-dns01-cross-account
+    kind: ClusterIssuer
+
+---
+# Option 2: Individual certificates using HTTP-01
+# Use these if you want to start quickly without DNS coordination
+
+# Certificate for API service
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: auth-dev-mocafi-cert
+  namespace: istio-ingress
+spec:
+  secretName: auth-dev-mocafi-cert
+  revisionHistoryLimit: 1
+  privateKey:
+    rotationPolicy: Always
+  commonName: "auth.dev.mocafi.com"
+  dnsNames:
+    - "auth.dev.mocafi.com"
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: letsencrypt-http01
+    kind: ClusterIssuer
+
+---
+# Certificate for Frontend App
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dex-portal-dev-mocafi-cert
+  namespace: istio-ingress
+spec:
+  secretName: dex-portal-dev-mocafi-cert
+  revisionHistoryLimit: 1
+  privateKey:
+    rotationPolicy: Always
+  commonName: "dex-portal.dev.mocafi.com"
+  dnsNames:
+    - "dex-portal.dev.mocafi.com"
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: letsencrypt-http01
+    kind: ClusterIssuer
+
+---
+# Certificate for Admin Dashboard
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wep-admin-dev-mocafi-cert
+  namespace: istio-ingress
+spec:
+  secretName: wep-admin-dev-mocafi-cert
+  revisionHistoryLimit: 1
+  privateKey:
+    rotationPolicy: Always
+  commonName: "wep-admin.dev.mocafi.com"
+  dnsNames:
+    - "wep-admin.dev.mocafi.com"
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: letsencrypt-http01
+    kind: ClusterIssuer
+

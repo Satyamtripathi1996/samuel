@@ -1,0 +1,10 @@
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - secretproviderclass.yaml
+  - crolenrolebinding.yaml
+  - job.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+

@@ -1,0 +1,60 @@
+resources:
+  - ../../base
+
+namespace: dex-user
+namePrefix: dex-backend-
+
+labels:
+  - pairs:
+      app: dex-user
+      component: dex-user
+      org: mocafi
+
+configMapGenerator:
+  - name: configmap
+    env: config.properties
+
+patches:
+  # Deployment
+  - target:
+      kind: Deployment
+      name: app
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: dex-user
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: "docker.io/sammieus/dex-user:dev"
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: dex-user
+  # Service
+  - target:
+      kind: Service
+      name: app
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: dex-user
+  # Nginx Ingress
+  # Service
+  - target:
+      kind: Ingress
+      name: app
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: dex-user
+      - op: replace
+        path: /spec/ingressClassName
+        value: ingress
+      - op: replace
+        path: /spec/rules/0/host
+        value: dex-user.dev.mocafi.com
+      - op: replace
+        path: /spec/rules/0/http/paths/0/backend/service/name
+        value: dex-backend-dex-user

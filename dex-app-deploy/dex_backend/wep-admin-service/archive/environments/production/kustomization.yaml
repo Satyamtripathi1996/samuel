@@ -1,0 +1,24 @@
+resources:
+  - ../../base
+
+namespace: production
+
+patchesStrategicMerge:
+  - patches/replica-counts.yaml
+
+configMapGenerator:
+  - name: wep-admin-service-configmap
+    literals:
+      - aws_cognito_pool_id=your_cognito_pool_id
+      - aws_region=us-east-1
+      - app_env=production
+      - node_env=development
+      - wep_frontend_url=https://wep.mocafi.com
+    
+secretGenerator:
+  - name: wep-admin-service-secret
+    literals:
+      - database_url=postgresql://test:test@test.com
+      - aws_secrete_access_key=fake_secret
+      - aws_access_key_id=fake_id
+    

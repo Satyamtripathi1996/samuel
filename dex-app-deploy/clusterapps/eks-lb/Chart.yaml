@@ -1,0 +1,9 @@
+apiVersion: v2
+name: eks-lb
+description: A Helm chart for EKD Load Balancer Controller
+# This chart deploys the AWS Load Balancer Controller for managing load balancers in EKS.
+version: 1.0.0
+dependencies:
+  - name: aws-load-balancer-controller
+    repository: https://aws.github.io/eks-charts
+    version: 1.13.0

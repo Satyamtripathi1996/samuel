@@ -1,0 +1,9 @@
+***/***/.terraform
+**/**/.terraform.lock.hcl
+***/***/terraform.tfstat*
+***/***/.terraform.tfstat*
+***/** */builds/** */
+
+.DS_Store
+***/.DS_Store
+***/***/.DS_Store

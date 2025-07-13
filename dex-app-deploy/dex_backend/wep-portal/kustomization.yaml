@@ -1,0 +1,235 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+
+namespace: wep-portal
+namePrefix: dex-backend-
+
+labels:
+  - pairs:
+      app: wep-portal-service
+      component: wep-portal
+      org: mocafi
+
+configMapGenerator:
+  - name: configmap
+    env: config.properties
+
+patches:
+  
+  # ServiceAccount for ECR Image Pull
+  - target:
+      kind: ServiceAccount
+      name: external-ecr-image-pull
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          eks.amazonaws.com/role-arn: arn:aws:iam::750014327084:role/external-ecr-image-pull-role
+
+  # ServiceAccount for Secret Management
+  - target:
+      kind: ServiceAccount
+      name: secrets-provider-aws
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          eks.amazonaws.com/role-arn: arn:aws:iam::750014327084:role/security-store-csi-role
+  
+  # patch for RoleBinding to allow access to the SecretProviderClass
+  - target:
+      kind: ClusterRoleBinding
+      name: secret-creator-rolebinding
+    patch: |-
+      - op: replace
+        path: /subjects
+        value:
+          - kind: ServiceAccount
+            name: dex-backend-secrets-provider-aws
+            namespace: wep-portal
+
+  # Secret Provider from AWS Secrets Manager
+  - target:
+      kind: SecretProviderClass
+      name: aws-secrets
+    patch: |-
+      - op: replace
+        path: /spec/parameters/objects
+        value: |
+          - objectName: "dex-backend-us-east-1-db-rds-secret2025060719073713060000000a"
+            objectType: "secretsmanager"
+            objectAlias: "aws-secret"
+            jmesPath:
+              - path: "host"
+                objectAlias: "SecretHost"
+              - path: "username"
+                objectAlias: "SecretUsername"
+              - path: "password"
+                objectAlias: "SecretPassword"
+              - path: "dbname"
+                objectAlias: "SecretDBName"
+  # Job for fetching secrets
+  - target:
+      kind: Job
+      name: secret-fetch-job
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/command
+        value: ["/bin/bash", "-c"]
+      - op: replace
+        path: /spec/template/spec/containers/0/args
+        value:
+          - |
+              set -e  # Exit on error
+              
+              echo "Starting secret fetch job..."
+
+              # Define expected secret files based on your jmesPath configuration
+              HOST_FILE="/mnt/secrets-store/SecretHost"
+              USERNAME_FILE="/mnt/secrets-store/SecretUsername"
+              PASSWORD_FILE="/mnt/secrets-store/SecretPassword"
+              DBNAME_FILE="/mnt/secrets-store/SecretDBName"
+              
+              # Check if all secret files exist
+              for file in "$HOST_FILE" "$USERNAME_FILE" "$PASSWORD_FILE" "$DBNAME_FILE"; do
+                if [ ! -f "$file" ]; then
+                  echo "Error: Secret file not found at $file"
+                  echo "Available files:"
+                  ls -la /mnt/secrets-store/ 2>/dev/null || echo "Mount directory not accessible"
+                  exit 1
+                fi
+              done
+              
+              echo "Found all secret files, reading content..."
+              
+              # Read the secret values from individual files
+              host=$(cat "$HOST_FILE")
+              username=$(cat "$USERNAME_FILE")
+              password=$(cat "$PASSWORD_FILE")
+              dbname=$(cat "$DBNAME_FILE")
+              
+              # Trim any whitespace/newlines
+              host=$(echo "$host" | tr -d '\n\r ')
+              username=$(echo "$username" | tr -d '\n\r ')
+              password=$(echo "$password" | tr -d '\n\r ')
+              dbname=$(echo "$dbname" | tr -d '\n\r ')
+              
+              # Validate that we got the values
+              if [ -z "$username" ] || [ -z "$password" ] || [ -z "$host" ] || [ -z "$dbname" ]; then
+                echo "Error: One or more secret values are empty"
+                echo "host: $host"
+                echo "username: $username"
+                echo "password: [REDACTED]"
+                echo "dbname: $dbname"
+                exit 1
+              fi
+              
+              echo "Successfully read all secret values"
+              echo "Host: $host"
+              echo "Username: $username"
+              echo "DB Name: $dbname"
+              echo "Password: [REDACTED]"
+              
+              # Create environment
+              DATABASE_URL="postgres://$username:$password@$host:5432/$dbname"
+              
+              # Create or update the Kubernetes secret
+              echo "Creating/updating Kubernetes secret..."
+              kubectl create secret generic app-secret \
+                --from-literal=DATABASE_URL="$DATABASE_URL" \
+                -n wep-portal
+              echo "Successfully created/updated app-secret in wep-portal namespace"
+
+              # Verify the secret was created
+              kubectl get secret app-secret -n wep-portal >/dev/null 2>&1 && echo "Secret verification successful" || echo "Secret verification failed"
+      - op: replace
+        path: /spec/template/spec/volumes/0/csi/volumeAttributes/secretProviderClass
+        value: "dex-backend-aws-secrets"
+
+  # Deployment
+  - target:
+      kind: Deployment
+      name: app
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: wep-portal-service
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/selector/matchLabels/app
+        value: wep-portal-service
+      - op: add
+        path: /spec/template/metadata/labels
+        value:
+          app: wep-portal-service
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: "494106420639.dkr.ecr.us-east-1.amazonaws.com/dex/wep-portal-service:0.3.2"
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: wep-portal-service
+      - op: replace
+        path: /spec/template/spec/containers/0/ports/0/containerPort
+        value: 3001
+      - op: add
+        path: /spec/template/spec/containers/0/envFrom
+        value:
+          - configMapRef:
+              name: dex-backend-configmap
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts
+        value:
+          - name: tmp-volume
+            mountPath: /tmp
+      - op: add
+        path: /spec/template/spec/volumes
+        value:
+          - name: tmp-volume
+            emptyDir: {}
+  # Service
+  - target:
+      kind: Service
+      name: app
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: wep-portal-service
+      - op: replace
+        path: /spec/ports/0/targetPort
+        value: 3001
+      - op: add
+        path: /spec/selector/app
+        value: wep-portal-service
+  # Nginx Ingress
+  - target:
+      kind: Ingress
+      name: app
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: wep-portal-service
+      - op: add
+        path: /metadata/annotations
+        value: 
+          external-dns.alpha.kubernetes.io/hostname: wep-portal.dex-be.mocafi.com
+          external-dns.alpha.kubernetes.io/ttl: "300"
+          cert-manager.io/cluster-issuer: letsencrypt-dns01
+      - op: replace
+        path: /spec/ingressClassName
+        value: nginx
+      - op: replace
+        path: /spec/rules/0/host
+        value: wep-portal.dex-be.mocafi.com
+      - op: replace
+        path: /spec/rules/0/http/paths/0/backend/service/name
+        value: dex-backend-wep-portal-service
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: wep-portal.dex-be.mocafi.com
+      - op: replace
+        path: /spec/tls/0/secretName
+        value: wep-portal-dex-be-tls

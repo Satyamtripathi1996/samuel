@@ -1,0 +1,2009 @@
+NAME: ingress-controller
+LAST DEPLOYED: Sun Jun 15 08:10:44 2025
+NAMESPACE: default
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+USER-SUPPLIED VALUES:
+ingress-nginx:
+  commonLabels: {}
+  controller:
+    addHeaders: {}
+    admissionWebhooks:
+      annotations: {}
+      certManager:
+        admissionCert:
+          duration: ""
+        enabled: false
+        rootCert:
+          duration: ""
+      certificate: /usr/local/certificates/cert
+      createSecretJob:
+        name: create
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      enabled: true
+      extraEnvs: []
+      failurePolicy: Fail
+      key: /usr/local/certificates/key
+      labels: {}
+      name: admission
+      namespaceSelector: {}
+      objectSelector: {}
+      patch:
+        enabled: true
+        image:
+          digest: sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+          image: ingress-nginx/kube-webhook-certgen
+          pullPolicy: IfNotPresent
+          tag: v1.5.4
+        labels: {}
+        networkPolicy:
+          enabled: false
+        nodeSelector:
+          kubernetes.io/os: linux
+        podAnnotations: {}
+        priorityClassName: ""
+        rbac:
+          create: true
+        securityContext: {}
+        serviceAccount:
+          automountServiceAccountToken: true
+          create: true
+          name: ""
+        tolerations: []
+      patchWebhookJob:
+        name: patch
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      port: 8443
+      service:
+        annotations: {}
+        externalIPs: []
+        loadBalancerSourceRanges: []
+        servicePort: 443
+        type: ClusterIP
+    affinity: {}
+    allowSnippetAnnotations: false
+    annotations: {}
+    autoscaling:
+      annotations: {}
+      behavior: {}
+      enabled: false
+      maxReplicas: 11
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+    autoscalingTemplate: []
+    config:
+      log-format-upstream: '{ "body_bytes_sent":"$body_bytes_sent", "host":"$host",
+        "http_referrer":"$http_referer", "http_user_agent":"$http_user_agent", "proxy_add_x_forwarded_for":"$proxy_add_x_forwarded_for",
+        "proxy_alternative_upstream_name":"$proxy_alternative_upstream_name", "proxy_upstream_name":"$proxy_upstream_name",
+        "remote_addr":"$remote_addr", "remote_user":"$remote_user", "request":"$request",
+        "request_id":"$req_id", "request_length":"$request_length", "request_method":"$request_method",
+        "request_path":"$uri", "request_proto":"$server_protocol", "request_query":"$args",
+        "request_time":"$request_time", "status":"$status", "time":"$time_local",
+        "upstream_addr":"$upstream_addr", "upstream_response_length":"$upstream_response_length",
+        "upstream_response_time":"$upstream_response_time", "upstream_status":"$upstream_status"
+        }'
+      ssl-ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+      ssl-prefer-server-ciphers: "False"
+      ssl-protocols: TLSv1.2 TLSv1.3
+    configAnnotations: {}
+    configMapNamespace: ""
+    containerName: controller
+    containerPort:
+      http: 80
+      https: 443
+    containerSecurityContext: {}
+    customTemplate:
+      configMapKey: ""
+      configMapName: ""
+    disableLeaderElection: false
+    dnsConfig: {}
+    dnsPolicy: ClusterFirst
+    electionID: ""
+    electionTTL: ""
+    enableAnnotationValidations: true
+    enableMimalloc: true
+    enableTopologyAwareRouting: false
+    extraArgs: {}
+    extraContainers: []
+    extraEnvs: []
+    extraInitContainers: []
+    extraModules: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    healthCheckHost: ""
+    healthCheckPath: /healthz
+    hostAliases: []
+    hostNetwork: false
+    hostPort:
+      enabled: false
+      ports:
+        http: 80
+        https: 443
+    hostname: {}
+    image:
+      allowPrivilegeEscalation: false
+      chroot: false
+      digest: sha256:ac444cd9515af325ba577b596fe4f27a34be1aa330538e8b317ad9d6c8fb94ee
+      digestChroot: sha256:d830fba93e9e0f5ef1462f5fe8a7cd7b167178b79e6c10c041c7da19f1ac66ab
+      image: ingress-nginx/controller
+      pullPolicy: IfNotPresent
+      readOnlyRootFilesystem: false
+      runAsGroup: 82
+      runAsNonRoot: true
+      runAsUser: 101
+      seccompProfile:
+        type: RuntimeDefault
+      tag: v1.12.3
+    ingressClass: nginx
+    ingressClassByName: false
+    ingressClassResource:
+      aliases: []
+      annotations: {}
+      controllerValue: k8s.io/ingress-nginx
+      default: false
+      enabled: true
+      name: nginx
+      parameters: {}
+    keda:
+      apiVersion: keda.sh/v1alpha1
+      behavior: {}
+      cooldownPeriod: 300
+      enabled: false
+      maxReplicas: 11
+      minReplicas: 1
+      pollingInterval: 30
+      restoreToOriginalReplicaCount: false
+      scaledObject:
+        annotations: {}
+      triggers: []
+    kind: Deployment
+    labels: {}
+    lifecycle:
+      preStop:
+        exec:
+          command:
+          - /wait-shutdown
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /healthz
+        port: 10254
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    maxmindLicenseKey: ""
+    metrics:
+      enabled: false
+      port: 10254
+      portName: metrics
+      prometheusRule:
+        additionalLabels: {}
+        annotations: {}
+        enabled: false
+        rules: []
+      service:
+        annotations: {}
+        enabled: true
+        externalIPs: []
+        labels: {}
+        loadBalancerSourceRanges: []
+        servicePort: 10254
+        type: ClusterIP
+      serviceMonitor:
+        additionalLabels: {}
+        annotations: {}
+        enabled: false
+        metricRelabelings: []
+        namespace: ""
+        namespaceSelector: {}
+        relabelings: []
+        scrapeInterval: 30s
+        targetLabels: []
+    minAvailable: 1
+    minReadySeconds: 0
+    name: controller
+    networkPolicy:
+      enabled: false
+    nodeSelector:
+      kubernetes.io/os: linux
+    podAnnotations: {}
+    podLabels: {}
+    podSecurityContext: {}
+    priorityClassName: ""
+    progressDeadlineSeconds: 0
+    proxySetHeaders: {}
+    publishService:
+      enabled: true
+      pathOverride: ""
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /healthz
+        port: 10254
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    replicaCount: 1
+    reportNodeInternalIp: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 90Mi
+    rollingUpdate:
+      maxUnavailable: 1
+    scope:
+      enabled: false
+      namespace: ""
+      namespaceSelector: ""
+    service:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      appProtocol: true
+      clusterIP: ""
+      enableHttp: true
+      enableHttps: true
+      enabled: true
+      external:
+        enabled: true
+      externalIPs: []
+      externalTrafficPolicy: Local
+      internal:
+        annotations: {}
+        appProtocol: true
+        clusterIP: ""
+        enabled: false
+        externalIPs: []
+        externalTrafficPolicy: Local
+        ipFamilies:
+        - IPv4
+        ipFamilyPolicy: SingleStack
+        loadBalancerClass: ""
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePorts:
+          http: ""
+          https: ""
+          tcp: {}
+          udp: {}
+        ports: {}
+        sessionAffinity: ""
+        targetPorts: {}
+        type: ""
+      ipFamilies:
+      - IPv4
+      ipFamilyPolicy: SingleStack
+      labels: {}
+      loadBalancerClass: ""
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        http: ""
+        https: ""
+        tcp: {}
+        udp: {}
+      ports:
+        http: 80
+        https: 443
+      sessionAffinity: ""
+      targetPorts:
+        http: http
+        https: https
+      type: LoadBalancer
+    shareProcessNamespace: false
+    sysctls: {}
+    tcp:
+      annotations: {}
+      configMapNamespace: ""
+    terminationGracePeriodSeconds: 300
+    tolerations: []
+    topologySpreadConstraints: []
+    type: RollingUpdate
+    udp:
+      annotations: {}
+      configMapNamespace: ""
+    unhealthyPodEvictionPolicy: ""
+    updateStrategy: null
+    watchIngressWithoutClass: false
+  defaultBackend:
+    affinity: {}
+    autoscaling:
+      annotations: {}
+      enabled: false
+      maxReplicas: 2
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+    containerSecurityContext: {}
+    enabled: false
+    extraArgs: {}
+    extraConfigMaps: []
+    extraEnvs: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    image:
+      allowPrivilegeEscalation: false
+      image: defaultbackend-amd64
+      pullPolicy: IfNotPresent
+      readOnlyRootFilesystem: true
+      runAsGroup: 65534
+      runAsNonRoot: true
+      runAsUser: 65534
+      seccompProfile:
+        type: RuntimeDefault
+      tag: "1.5"
+    labels: {}
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    minAvailable: 1
+    minReadySeconds: 0
+    name: defaultbackend
+    networkPolicy:
+      enabled: false
+    nodeSelector:
+      kubernetes.io/os: linux
+    podAnnotations: {}
+    podLabels: {}
+    podSecurityContext: {}
+    port: 8080
+    priorityClassName: ""
+    readinessProbe:
+      failureThreshold: 6
+      initialDelaySeconds: 0
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    replicaCount: 1
+    resources: {}
+    service:
+      annotations: {}
+      externalIPs: []
+      loadBalancerSourceRanges: []
+      servicePort: 80
+      type: ClusterIP
+    serviceAccount:
+      automountServiceAccountToken: true
+      create: true
+      name: ""
+    tolerations: []
+    topologySpreadConstraints: []
+    unhealthyPodEvictionPolicy: ""
+    updateStrategy: {}
+  dhParam: ""
+  global:
+    image:
+      registry: registry.k8s.io
+  imagePullSecrets: []
+  namespaceOverride: ""
+  portNamePrefix: ""
+  rbac:
+    create: true
+    scope: false
+  revisionHistoryLimit: 10
+  serviceAccount:
+    annotations: {}
+    automountServiceAccountToken: true
+    create: true
+    name: ""
+  tcp: {}
+  udp: {}
+
+COMPUTED VALUES:
+commonLabels: {}
+controller:
+  addHeaders: {}
+  admissionWebhooks:
+    annotations: {}
+    certManager:
+      admissionCert:
+        duration: ""
+      enabled: false
+      rootCert:
+        duration: ""
+    certificate: /usr/local/certificates/cert
+    createSecretJob:
+      name: create
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+    enabled: true
+    extraEnvs: []
+    failurePolicy: Fail
+    key: /usr/local/certificates/key
+    labels: {}
+    name: admission
+    namespaceSelector: {}
+    objectSelector: {}
+    patch:
+      enabled: true
+      image:
+        digest: sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+        image: ingress-nginx/kube-webhook-certgen
+        pullPolicy: IfNotPresent
+        tag: v1.5.4
+      labels: {}
+      networkPolicy:
+        enabled: false
+      nodeSelector:
+        kubernetes.io/os: linux
+      podAnnotations: {}
+      priorityClassName: ""
+      rbac:
+        create: true
+      securityContext: {}
+      serviceAccount:
+        automountServiceAccountToken: true
+        create: true
+        name: ""
+      tolerations: []
+    patchWebhookJob:
+      name: patch
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+    port: 8443
+    service:
+      annotations: {}
+      externalIPs: []
+      loadBalancerSourceRanges: []
+      servicePort: 443
+      type: ClusterIP
+  affinity: {}
+  allowSnippetAnnotations: false
+  annotations: {}
+  autoscaling:
+    annotations: {}
+    behavior: {}
+    enabled: false
+    maxReplicas: 11
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
+  autoscalingTemplate: []
+  config:
+    log-format-upstream: '{ "body_bytes_sent":"$body_bytes_sent", "host":"$host",
+      "http_referrer":"$http_referer", "http_user_agent":"$http_user_agent", "proxy_add_x_forwarded_for":"$proxy_add_x_forwarded_for",
+      "proxy_alternative_upstream_name":"$proxy_alternative_upstream_name", "proxy_upstream_name":"$proxy_upstream_name",
+      "remote_addr":"$remote_addr", "remote_user":"$remote_user", "request":"$request",
+      "request_id":"$req_id", "request_length":"$request_length", "request_method":"$request_method",
+      "request_path":"$uri", "request_proto":"$server_protocol", "request_query":"$args",
+      "request_time":"$request_time", "status":"$status", "time":"$time_local", "upstream_addr":"$upstream_addr",
+      "upstream_response_length":"$upstream_response_length", "upstream_response_time":"$upstream_response_time",
+      "upstream_status":"$upstream_status" }'
+    ssl-ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+    ssl-prefer-server-ciphers: "False"
+    ssl-protocols: TLSv1.2 TLSv1.3
+  configAnnotations: {}
+  configMapNamespace: ""
+  containerName: controller
+  containerPort:
+    http: 80
+    https: 443
+  containerSecurityContext: {}
+  customTemplate:
+    configMapKey: ""
+    configMapName: ""
+  disableLeaderElection: false
+  dnsConfig: {}
+  dnsPolicy: ClusterFirst
+  electionID: ""
+  electionTTL: ""
+  enableAnnotationValidations: true
+  enableMimalloc: true
+  enableTopologyAwareRouting: false
+  extraArgs: {}
+  extraContainers: []
+  extraEnvs: []
+  extraInitContainers: []
+  extraModules: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  healthCheckHost: ""
+  healthCheckPath: /healthz
+  hostAliases: []
+  hostNetwork: false
+  hostPort:
+    enabled: false
+    ports:
+      http: 80
+      https: 443
+  hostname: {}
+  image:
+    allowPrivilegeEscalation: false
+    chroot: false
+    digest: sha256:ac444cd9515af325ba577b596fe4f27a34be1aa330538e8b317ad9d6c8fb94ee
+    digestChroot: sha256:d830fba93e9e0f5ef1462f5fe8a7cd7b167178b79e6c10c041c7da19f1ac66ab
+    image: ingress-nginx/controller
+    pullPolicy: IfNotPresent
+    readOnlyRootFilesystem: false
+    runAsGroup: 82
+    runAsNonRoot: true
+    runAsUser: 101
+    seccompProfile:
+      type: RuntimeDefault
+    tag: v1.12.3
+  ingressClass: nginx
+  ingressClassByName: false
+  ingressClassResource:
+    aliases: []
+    annotations: {}
+    controllerValue: k8s.io/ingress-nginx
+    default: false
+    enabled: true
+    name: nginx
+    parameters: {}
+  keda:
+    apiVersion: keda.sh/v1alpha1
+    behavior: {}
+    cooldownPeriod: 300
+    enabled: false
+    maxReplicas: 11
+    minReplicas: 1
+    pollingInterval: 30
+    restoreToOriginalReplicaCount: false
+    scaledObject:
+      annotations: {}
+    triggers: []
+  kind: DaemonSet
+  labels: {}
+  lifecycle:
+    preStop:
+      exec:
+        command:
+        - /wait-shutdown
+  livenessProbe:
+    failureThreshold: 5
+    httpGet:
+      path: /healthz
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  maxmindLicenseKey: ""
+  metrics:
+    enabled: false
+    port: 10254
+    portName: metrics
+    prometheusRule:
+      additionalLabels: {}
+      annotations: {}
+      enabled: false
+      rules: []
+    service:
+      annotations: {}
+      enabled: true
+      externalIPs: []
+      labels: {}
+      loadBalancerSourceRanges: []
+      servicePort: 10254
+      type: ClusterIP
+    serviceMonitor:
+      additionalLabels: {}
+      annotations: {}
+      enabled: false
+      metricRelabelings: []
+      namespace: ""
+      namespaceSelector: {}
+      relabelings: []
+      scrapeInterval: 30s
+      targetLabels: []
+  minAvailable: 1
+  minReadySeconds: 0
+  name: controller
+  networkPolicy:
+    enabled: false
+  nodeSelector:
+    kubernetes.io/os: linux
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  priorityClassName: ""
+  progressDeadlineSeconds: 0
+  proxySetHeaders: {}
+  publishService:
+    enabled: true
+    pathOverride: ""
+  readinessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /healthz
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  replicaCount: 1
+  reportNodeInternalIp: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 90Mi
+  scope:
+    enabled: false
+    namespace: ""
+    namespaceSelector: ""
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    appProtocol: true
+    clusterIP: ""
+    enableHttp: true
+    enableHttps: true
+    enabled: true
+    external:
+      enabled: true
+    externalIPs: []
+    externalTrafficPolicy: Local
+    internal:
+      annotations: {}
+      appProtocol: true
+      clusterIP: ""
+      enabled: false
+      externalIPs: []
+      externalTrafficPolicy: Local
+      ipFamilies:
+      - IPv4
+      ipFamilyPolicy: SingleStack
+      loadBalancerClass: ""
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        http: ""
+        https: ""
+        tcp: {}
+        udp: {}
+      ports: {}
+      sessionAffinity: ""
+      targetPorts: {}
+      type: ""
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    labels: {}
+    loadBalancerClass: ""
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    nodePorts:
+      http: ""
+      https: ""
+      tcp: {}
+      udp: {}
+    ports:
+      http: 80
+      https: 443
+    sessionAffinity: ""
+    targetPorts:
+      http: http
+      https: https
+    type: LoadBalancer
+  shareProcessNamespace: false
+  sysctls: {}
+  tcp:
+    annotations: {}
+    configMapNamespace: ""
+  terminationGracePeriodSeconds: 300
+  tolerations: []
+  topologySpreadConstraints: []
+  udp:
+    annotations: {}
+    configMapNamespace: ""
+  unhealthyPodEvictionPolicy: ""
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  watchIngressWithoutClass: false
+defaultBackend:
+  affinity: {}
+  autoscaling:
+    annotations: {}
+    enabled: false
+    maxReplicas: 2
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
+  containerSecurityContext: {}
+  enabled: false
+  extraArgs: {}
+  extraConfigMaps: []
+  extraEnvs: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  image:
+    allowPrivilegeEscalation: false
+    image: defaultbackend-amd64
+    pullPolicy: IfNotPresent
+    readOnlyRootFilesystem: true
+    runAsGroup: 65534
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+    tag: "1.5"
+  labels: {}
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  minAvailable: 1
+  minReadySeconds: 0
+  name: defaultbackend
+  networkPolicy:
+    enabled: false
+  nodeSelector:
+    kubernetes.io/os: linux
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  port: 8080
+  priorityClassName: ""
+  readinessProbe:
+    failureThreshold: 6
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 5
+  replicaCount: 1
+  resources: {}
+  service:
+    annotations: {}
+    externalIPs: []
+    loadBalancerSourceRanges: []
+    servicePort: 80
+    type: ClusterIP
+  serviceAccount:
+    automountServiceAccountToken: true
+    create: true
+    name: ""
+  tolerations: []
+  topologySpreadConstraints: []
+  unhealthyPodEvictionPolicy: ""
+  updateStrategy: {}
+dhParam: ""
+global:
+  image:
+    registry: registry.k8s.io
+imagePullSecrets: []
+ingress-nginx:
+  commonLabels: {}
+  controller:
+    addHeaders: {}
+    admissionWebhooks:
+      annotations: {}
+      certManager:
+        admissionCert:
+          duration: ""
+        enabled: false
+        rootCert:
+          duration: ""
+      certificate: /usr/local/certificates/cert
+      createSecretJob:
+        name: create
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      enabled: true
+      extraEnvs: []
+      failurePolicy: Fail
+      key: /usr/local/certificates/key
+      labels: {}
+      name: admission
+      namespaceSelector: {}
+      objectSelector: {}
+      patch:
+        enabled: true
+        image:
+          digest: sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+          image: ingress-nginx/kube-webhook-certgen
+          pullPolicy: IfNotPresent
+          tag: v1.5.4
+        labels: {}
+        networkPolicy:
+          enabled: false
+        nodeSelector:
+          kubernetes.io/os: linux
+        podAnnotations: {}
+        priorityClassName: ""
+        rbac:
+          create: true
+        securityContext: {}
+        serviceAccount:
+          automountServiceAccountToken: true
+          create: true
+          name: ""
+        tolerations: []
+      patchWebhookJob:
+        name: patch
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      port: 8443
+      service:
+        annotations: {}
+        externalIPs: []
+        loadBalancerSourceRanges: []
+        servicePort: 443
+        type: ClusterIP
+    affinity: {}
+    allowSnippetAnnotations: false
+    annotations: {}
+    autoscaling:
+      annotations: {}
+      behavior: {}
+      enabled: false
+      maxReplicas: 11
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+    autoscalingTemplate: []
+    config:
+      log-format-upstream: '{ "body_bytes_sent":"$body_bytes_sent", "host":"$host",
+        "http_referrer":"$http_referer", "http_user_agent":"$http_user_agent", "proxy_add_x_forwarded_for":"$proxy_add_x_forwarded_for",
+        "proxy_alternative_upstream_name":"$proxy_alternative_upstream_name", "proxy_upstream_name":"$proxy_upstream_name",
+        "remote_addr":"$remote_addr", "remote_user":"$remote_user", "request":"$request",
+        "request_id":"$req_id", "request_length":"$request_length", "request_method":"$request_method",
+        "request_path":"$uri", "request_proto":"$server_protocol", "request_query":"$args",
+        "request_time":"$request_time", "status":"$status", "time":"$time_local",
+        "upstream_addr":"$upstream_addr", "upstream_response_length":"$upstream_response_length",
+        "upstream_response_time":"$upstream_response_time", "upstream_status":"$upstream_status"
+        }'
+      ssl-ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+      ssl-prefer-server-ciphers: "False"
+      ssl-protocols: TLSv1.2 TLSv1.3
+    configAnnotations: {}
+    configMapNamespace: ""
+    containerName: controller
+    containerPort:
+      http: 80
+      https: 443
+    containerSecurityContext: {}
+    customTemplate:
+      configMapKey: ""
+      configMapName: ""
+    disableLeaderElection: false
+    dnsConfig: {}
+    dnsPolicy: ClusterFirst
+    electionID: ""
+    electionTTL: ""
+    enableAnnotationValidations: true
+    enableMimalloc: true
+    enableTopologyAwareRouting: false
+    extraArgs: {}
+    extraContainers: []
+    extraEnvs: []
+    extraInitContainers: []
+    extraModules: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    healthCheckHost: ""
+    healthCheckPath: /healthz
+    hostAliases: []
+    hostNetwork: false
+    hostPort:
+      enabled: false
+      ports:
+        http: 80
+        https: 443
+    hostname: {}
+    image:
+      allowPrivilegeEscalation: false
+      chroot: false
+      digest: sha256:ac444cd9515af325ba577b596fe4f27a34be1aa330538e8b317ad9d6c8fb94ee
+      digestChroot: sha256:d830fba93e9e0f5ef1462f5fe8a7cd7b167178b79e6c10c041c7da19f1ac66ab
+      image: ingress-nginx/controller
+      pullPolicy: IfNotPresent
+      readOnlyRootFilesystem: false
+      runAsGroup: 82
+      runAsNonRoot: true
+      runAsUser: 101
+      seccompProfile:
+        type: RuntimeDefault
+      tag: v1.12.3
+    ingressClass: nginx
+    ingressClassByName: false
+    ingressClassResource:
+      aliases: []
+      annotations: {}
+      controllerValue: k8s.io/ingress-nginx
+      default: false
+      enabled: true
+      name: nginx
+      parameters: {}
+    keda:
+      apiVersion: keda.sh/v1alpha1
+      behavior: {}
+      cooldownPeriod: 300
+      enabled: false
+      maxReplicas: 11
+      minReplicas: 1
+      pollingInterval: 30
+      restoreToOriginalReplicaCount: false
+      scaledObject:
+        annotations: {}
+      triggers: []
+    kind: Deployment
+    labels: {}
+    lifecycle:
+      preStop:
+        exec:
+          command:
+          - /wait-shutdown
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /healthz
+        port: 10254
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    maxmindLicenseKey: ""
+    metrics:
+      enabled: false
+      port: 10254
+      portName: metrics
+      prometheusRule:
+        additionalLabels: {}
+        annotations: {}
+        enabled: false
+        rules: []
+      service:
+        annotations: {}
+        enabled: true
+        externalIPs: []
+        labels: {}
+        loadBalancerSourceRanges: []
+        servicePort: 10254
+        type: ClusterIP
+      serviceMonitor:
+        additionalLabels: {}
+        annotations: {}
+        enabled: false
+        metricRelabelings: []
+        namespace: ""
+        namespaceSelector: {}
+        relabelings: []
+        scrapeInterval: 30s
+        targetLabels: []
+    minAvailable: 1
+    minReadySeconds: 0
+    name: controller
+    networkPolicy:
+      enabled: false
+    nodeSelector:
+      kubernetes.io/os: linux
+    podAnnotations: {}
+    podLabels: {}
+    podSecurityContext: {}
+    priorityClassName: ""
+    progressDeadlineSeconds: 0
+    proxySetHeaders: {}
+    publishService:
+      enabled: true
+      pathOverride: ""
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /healthz
+        port: 10254
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    replicaCount: 1
+    reportNodeInternalIp: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 90Mi
+    rollingUpdate:
+      maxUnavailable: 1
+    scope:
+      enabled: false
+      namespace: ""
+      namespaceSelector: ""
+    service:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      appProtocol: true
+      clusterIP: ""
+      enableHttp: true
+      enableHttps: true
+      enabled: true
+      external:
+        enabled: true
+      externalIPs: []
+      externalTrafficPolicy: Local
+      internal:
+        annotations: {}
+        appProtocol: true
+        clusterIP: ""
+        enabled: false
+        externalIPs: []
+        externalTrafficPolicy: Local
+        ipFamilies:
+        - IPv4
+        ipFamilyPolicy: SingleStack
+        loadBalancerClass: ""
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        nodePorts:
+          http: ""
+          https: ""
+          tcp: {}
+          udp: {}
+        ports: {}
+        sessionAffinity: ""
+        targetPorts: {}
+        type: ""
+      ipFamilies:
+      - IPv4
+      ipFamilyPolicy: SingleStack
+      labels: {}
+      loadBalancerClass: ""
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        http: ""
+        https: ""
+        tcp: {}
+        udp: {}
+      ports:
+        http: 80
+        https: 443
+      sessionAffinity: ""
+      targetPorts:
+        http: http
+        https: https
+      type: LoadBalancer
+    shareProcessNamespace: false
+    sysctls: {}
+    tcp:
+      annotations: {}
+      configMapNamespace: ""
+    terminationGracePeriodSeconds: 300
+    tolerations: []
+    topologySpreadConstraints: []
+    type: RollingUpdate
+    udp:
+      annotations: {}
+      configMapNamespace: ""
+    unhealthyPodEvictionPolicy: ""
+    watchIngressWithoutClass: false
+  defaultBackend:
+    affinity: {}
+    autoscaling:
+      annotations: {}
+      enabled: false
+      maxReplicas: 2
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+    containerSecurityContext: {}
+    enabled: false
+    extraArgs: {}
+    extraConfigMaps: []
+    extraEnvs: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    image:
+      allowPrivilegeEscalation: false
+      image: defaultbackend-amd64
+      pullPolicy: IfNotPresent
+      readOnlyRootFilesystem: true
+      runAsGroup: 65534
+      runAsNonRoot: true
+      runAsUser: 65534
+      seccompProfile:
+        type: RuntimeDefault
+      tag: "1.5"
+    labels: {}
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    minAvailable: 1
+    minReadySeconds: 0
+    name: defaultbackend
+    networkPolicy:
+      enabled: false
+    nodeSelector:
+      kubernetes.io/os: linux
+    podAnnotations: {}
+    podLabels: {}
+    podSecurityContext: {}
+    port: 8080
+    priorityClassName: ""
+    readinessProbe:
+      failureThreshold: 6
+      initialDelaySeconds: 0
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    replicaCount: 1
+    resources: {}
+    service:
+      annotations: {}
+      externalIPs: []
+      loadBalancerSourceRanges: []
+      servicePort: 80
+      type: ClusterIP
+    serviceAccount:
+      automountServiceAccountToken: true
+      create: true
+      name: ""
+    tolerations: []
+    topologySpreadConstraints: []
+    unhealthyPodEvictionPolicy: ""
+    updateStrategy: {}
+  dhParam: ""
+  global:
+    image:
+      registry: registry.k8s.io
+  imagePullSecrets: []
+  namespaceOverride: ""
+  portNamePrefix: ""
+  rbac:
+    create: true
+    scope: false
+  revisionHistoryLimit: 10
+  serviceAccount:
+    annotations: {}
+    automountServiceAccountToken: true
+    create: true
+    name: ""
+  tcp: {}
+  udp: {}
+namespaceOverride: ""
+portNamePrefix: ""
+rbac:
+  create: true
+  scope: false
+revisionHistoryLimit: 10
+serviceAccount:
+  annotations: {}
+  automountServiceAccountToken: true
+  create: true
+  name: ""
+tcp: {}
+udp: {}
+
+HOOKS:
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ingress-controller-ingress-nginx-admission
+  namespace: default
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+automountServiceAccountToken: true
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ingress-controller-ingress-nginx-admission
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+rules:
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - validatingwebhookconfigurations
+    verbs:
+      - get
+      - update
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ingress-controller-ingress-nginx-admission
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-controller-ingress-nginx-admission
+subjects:
+  - kind: ServiceAccount
+    name: ingress-controller-ingress-nginx-admission
+    namespace: default
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ingress-controller-ingress-nginx-admission
+  namespace: default
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - create
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ingress-controller-ingress-nginx-admission
+  namespace: default
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-controller-ingress-nginx-admission
+subjects:
+  - kind: ServiceAccount
+    name: ingress-controller-ingress-nginx-admission
+    namespace: default
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/job-createSecret.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingress-controller-ingress-nginx-admission-create
+  namespace: default
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    metadata:
+      name: ingress-controller-ingress-nginx-admission-create
+      labels:
+        helm.sh/chart: ingress-nginx-4.12.3
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-controller
+        app.kubernetes.io/version: "1.12.3"
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: admission-webhook
+    spec:
+      containers:
+        - name: create
+          image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.5.4@sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+          imagePullPolicy: IfNotPresent
+          args:
+            - create
+            - --host=ingress-controller-ingress-nginx-controller-admission,ingress-controller-ingress-nginx-controller-admission.$(POD_NAMESPACE).svc
+            - --namespace=$(POD_NAMESPACE)
+            - --secret-name=ingress-controller-ingress-nginx-admission
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+      restartPolicy: OnFailure
+      serviceAccountName: ingress-controller-ingress-nginx-admission
+      nodeSelector: 
+        kubernetes.io/os: linux
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/job-patch/job-patchWebhook.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingress-controller-ingress-nginx-admission-patch
+  namespace: default
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    metadata:
+      name: ingress-controller-ingress-nginx-admission-patch
+      labels:
+        helm.sh/chart: ingress-nginx-4.12.3
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-controller
+        app.kubernetes.io/version: "1.12.3"
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: admission-webhook
+    spec:
+      containers:
+        - name: patch
+          image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.5.4@sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+          imagePullPolicy: IfNotPresent
+          args:
+            - patch
+            - --webhook-name=ingress-controller-ingress-nginx-admission
+            - --namespace=$(POD_NAMESPACE)
+            - --patch-mutating=false
+            - --secret-name=ingress-controller-ingress-nginx-admission
+            - --patch-failure-policy=Fail
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+      restartPolicy: OnFailure
+      serviceAccountName: ingress-controller-ingress-nginx-admission
+      nodeSelector: 
+        kubernetes.io/os: linux
+MANIFEST:
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx
+  namespace: default
+automountServiceAccountToken: true
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx-controller
+  namespace: default
+data:
+  log-format-upstream: "{ \"body_bytes_sent\":\"$body_bytes_sent\", \"host\":\"$host\", \"http_referrer\":\"$http_referer\", \"http_user_agent\":\"$http_user_agent\", \"proxy_add_x_forwarded_for\":\"$proxy_add_x_forwarded_for\", \"proxy_alternative_upstream_name\":\"$proxy_alternative_upstream_name\", \"proxy_upstream_name\":\"$proxy_upstream_name\", \"remote_addr\":\"$remote_addr\", \"remote_user\":\"$remote_user\", \"request\":\"$request\", \"request_id\":\"$req_id\", \"request_length\":\"$request_length\", \"request_method\":\"$request_method\", \"request_path\":\"$uri\", \"request_proto\":\"$server_protocol\", \"request_query\":\"$args\", \"request_time\":\"$request_time\", \"status\":\"$status\", \"time\":\"$time_local\", \"upstream_addr\":\"$upstream_addr\", \"upstream_response_length\":\"$upstream_response_length\", \"upstream_response_time\":\"$upstream_response_time\", \"upstream_status\":\"$upstream_status\" }"
+  ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+  ssl-prefer-server-ciphers: "False"
+  ssl-protocols: "TLSv1.2 TLSv1.3"
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+  name: ingress-controller-ingress-nginx
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - nodes
+      - pods
+      - secrets
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+      - get
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+  name: ingress-controller-ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-controller-ingress-nginx
+subjects:
+  - kind: ServiceAccount
+    name: ingress-controller-ingress-nginx
+    namespace: default
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx
+  namespace: default
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - pods
+      - secrets
+      - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  # Omit Ingress status permissions if `--update-status` is disabled.
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    resourceNames:
+      - ingress-controller-ingress-nginx-leader
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+      - get
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-controller-ingress-nginx
+subjects:
+  - kind: ServiceAccount
+    name: ingress-controller-ingress-nginx
+    namespace: default
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-service-webhook.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx-controller-admission
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - name: https-webhook
+      port: 443
+      targetPort: webhook
+      appProtocol: https
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/component: controller
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx-controller
+  namespace: default
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ipFamilyPolicy: SingleStack
+  ipFamilies: 
+    - IPv4
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+      appProtocol: http
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+      appProtocol: https
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/component: controller
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-controller-ingress-nginx-controller
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/instance: ingress-controller
+      app.kubernetes.io/component: controller
+  replicas: 1
+  revisionHistoryLimit: 10
+  minReadySeconds: 0
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: ingress-nginx-4.12.3
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-controller
+        app.kubernetes.io/version: "1.12.3"
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: controller
+    spec:
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: controller
+          image: registry.k8s.io/ingress-nginx/controller:v1.12.3@sha256:ac444cd9515af325ba577b596fe4f27a34be1aa330538e8b317ad9d6c8fb94ee
+          imagePullPolicy: IfNotPresent
+          lifecycle: 
+            preStop:
+              exec:
+                command:
+                - /wait-shutdown
+          args: 
+            - /nginx-ingress-controller
+            - --publish-service=$(POD_NAMESPACE)/ingress-controller-ingress-nginx-controller
+            - --election-id=ingress-controller-ingress-nginx-leader
+            - --controller-class=k8s.io/ingress-nginx
+            - --ingress-class=nginx
+            - --configmap=$(POD_NAMESPACE)/ingress-controller-ingress-nginx-controller
+            - --validating-webhook=:8443
+            - --validating-webhook-certificate=/usr/local/certificates/cert
+            - --validating-webhook-key=/usr/local/certificates/key
+          securityContext: 
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 82
+            allowPrivilegeEscalation: false
+            seccompProfile: 
+              type: RuntimeDefault
+            capabilities:
+              drop:
+              - ALL
+              add:
+              - NET_BIND_SERVICE
+            readOnlyRootFilesystem: false
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LD_PRELOAD
+              value: /usr/local/lib/libmimalloc.so
+          livenessProbe: 
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe: 
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: webhook
+              containerPort: 8443
+              protocol: TCP
+          volumeMounts:
+            - name: webhook-cert
+              mountPath: /usr/local/certificates/
+              readOnly: true
+          resources: 
+            requests:
+              cpu: 100m
+              memory: 90Mi
+      nodeSelector: 
+        kubernetes.io/os: linux
+      serviceAccountName: ingress-controller-ingress-nginx
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: webhook-cert
+          secret:
+            secretName: ingress-controller-ingress-nginx-admission
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-ingressclass.yaml
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/controller-poddisruptionbudget.yaml
+# PDB is not supported for DaemonSets.
+# https://github.com/kubernetes/kubernetes/issues/108124
+---
+# Source: ingress-nginx/charts/ingress-nginx/templates/admission-webhooks/validating-webhook.yaml
+# before changing this value, check the required kubernetes version
+# https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#prerequisites
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+  labels:
+    helm.sh/chart: ingress-nginx-4.12.3
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-controller
+    app.kubernetes.io/version: "1.12.3"
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+  name: ingress-controller-ingress-nginx-admission
+webhooks:
+  - name: validate.nginx.ingress.kubernetes.io
+    matchPolicy: Equivalent
+    rules:
+      - apiGroups:
+          - networking.k8s.io
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - ingresses
+    failurePolicy: Fail
+    sideEffects: None
+    admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: ingress-controller-ingress-nginx-controller-admission
+        namespace: default
+        port: 443
+        path: /networking/v1/ingresses
+

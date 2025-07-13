@@ -1,0 +1,23 @@
+Create a new GitHub Personal Access Token (classic) with appropriate scopes:
+
+Go to your GitHub Settings > Developer Settings > Personal access tokens > Tokens (classic)
+
+Click Generate new token (classic)
+
+Select scopes: repo, workflow (at least)
+
+Generate and copy the new token — you won’t be able to see it again after leaving the page!
+
+
+
+
+
+
+
+
+aws ssm put-parameter --name "/github/pat/sports-commerce" --value "ghp_NEWLY_GENERATED_TOKEN" --type SecureString --overwrite
+
+
+Run Terraform again 
+
+

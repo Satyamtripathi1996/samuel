@@ -1,0 +1,25 @@
+argo-cd:
+  global:
+    domain: argocd.dex-be.mocafi.com
+  configs:
+    params:
+      server.insecure: false
+  server:
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-dns01
+        external-dns.alpha.kubernetes.io/hostname: argocd.dex-be.mocafi.com
+        external-dns.alpha.kubernetes.io/ttl: "300"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      enabled: true
+      ingressClassName: nginx
+      tls: true
+  applicationSets:
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-dns01
+        external-dns.alpha.kubernetes.io/hostname: argocd.dex-be.mocafi.com
+        external-dns.alpha.kubernetes.io/ttl: "300"
+      enabled: true
+      ingressClassName: nginx
+      tls: true

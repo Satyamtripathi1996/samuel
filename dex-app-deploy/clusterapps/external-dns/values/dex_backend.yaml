@@ -1,0 +1,20 @@
+external-dns:
+  domainFilters:
+    - dex-be.mocafi.com
+  interval: 1m
+  policy: sync
+  registry: txt
+  txtOwnerId: Z09636092KL2CUON1XMY0
+  txtPrefix: "_dex-be."
+  
+  provider:
+    name: aws
+  extraArgs: 
+    - --aws-zone-type=public
+    - --request-timeout=30s
+  env:
+  - name: AWS_DEFAULT_REGION
+    value: us-east-1
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::750014327084:role/external-dns

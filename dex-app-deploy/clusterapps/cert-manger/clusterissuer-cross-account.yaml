@@ -1,0 +1,21 @@
+# Cross-Account ClusterIssuer for accessing Route53 in domain owner account
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns01-cross-account
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: api-development@mocafi.com
+    privateKeySecretRef:
+      name: letsencrypt-dns01-cross-account-private-key
+    solvers:
+    - dns01:
+        route53:
+          region: us-east-1
+          role: arn:aws:iam::494106420639:role/CertManagerCrossAccountAccess
+          auth:
+            kubernetes:
+              serviceAccountRef:
+                name: cert-manager-acme-dns01-route53
+

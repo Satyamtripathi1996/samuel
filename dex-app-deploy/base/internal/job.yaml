@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: secret-fetch-job
+spec:
+  template:
+    spec:
+      serviceAccountName: secrets-provider-aws
+      restartPolicy: Never
+      containers:
+        - name: fetcher
+          image: bitnami/kubectl:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              set -e  # Exit on error
+              
+              # Install jq
+              apt-get update && apt-get install -y jq 
+              
+              # Create secrets directory
+              mkdir -p /secrets
+              
+              # Check if secret file exists
+              if [ ! -f /mnt/secrets-store/aws-secret ]; then
+                echo "Error: Secret file not found at /mnt/secrets-store/aws-secret"
+                exit 1
+              fi
+              
+              # Parse the secret
+              secret=$(cat /mnt/secrets-store/aws-secret)
+              username=$(echo "$secret" | jq -r .username)
+              password=$(echo "$secret" | jq -r .password)
+              host=$(echo "$secret" | jq -r .host)
+              dbname=$(echo "$secret" | jq -r .dbname)
+              
+              # Validate that we got the values
+              if [ "$username" = "null" ] || [ "$password" = "null" ] || [ "$host" = "null" ] || [ "$dbname" = "null" ]; then
+                echo "Error: Failed to parse secret values"
+                echo "Secret content: $secret"
+                exit 1
+              fi
+              
+              # Create environment file
+              echo "DATABASE_URL='postgres://$username:$password@$host:5432/$dbname'" >> /secrets/credentials.env
+              
+              # Create or update the Kubernetes secret
+              kubectl create secret generic app-secret \
+                --from-env-file=/secrets/credentials.env \
+                -n app-team --dry-run=client -o yaml | \
+              kubectl apply -f -
+              
+              echo "Successfully created/updated app-secret in app-team namespace"
+          volumeMounts:
+            - name: secrets-store
+              mountPath: /mnt/secrets-store
+              readOnly: true
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "aws-secrets"

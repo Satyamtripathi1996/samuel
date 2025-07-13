@@ -1,0 +1,9 @@
+apiVersion: v2
+name: csi-secrets-store-provider-aws
+description: A Helm chart for AWS Service Store Provider and Config Provider
+version: 1.0.0
+dependencies:
+  - name: secrets-store-csi-driver-provider-aws
+    alias: csi-secrets-store-provider-aws
+    repository: "@aws-secrets-manager"
+    version: 1.0.1

@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-http01
+spec:
+  acme:
+    email: technical-operations+dexbeqa@mocafi.com
+    privateKeySecretRef:
+      name: letsencrypt-http01-key
+    server: https://acme-v02.api.letsencrypt.org/directory 
+    solvers:
+    - http01:
+        ingress:
+          ingressClassName: nginx
+          ingressTemplate:
+            metadata:
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt-http01
+                external-dns.alpha.kubernetes.io/hostname: "*.dex-be.mocafi.com"
+            

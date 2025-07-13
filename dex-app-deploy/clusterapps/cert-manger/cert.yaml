@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dev-wildcard-cert
+  namespace: istio-ingress
+spec:
+  secretName: dev-wildcard-cert
+  revisionHistoryLimit: 1
+  privateKey:
+    rotationPolicy: Always
+  commonName: "*.dev.mocafi.com"
+  dnsNames:
+    - "*.dev.mocafi.com"
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: letsencrypt-dns01
+    kind: ClusterIssuer
+  
